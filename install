@@ -63,7 +63,7 @@ selected_actions=(
 
 function select_from_menu()
 {
-  local prompt="--Choose the configs you wanna install--"
+  local prompt="--Select the configs you wanna install--"
   local options=(
     "install dependencies" "kitty" "tmux" "vim" "ranger" "install yay"
     "grub theme" "INSTALL"
