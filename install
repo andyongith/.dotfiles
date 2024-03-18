@@ -36,6 +36,11 @@ function config_ranger() {
   ln -sf ../.dotfiles/.config/ranger .config/ranger
 }
 
+function install_oh_my_bash() {
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended
+  sed -i "$(grep -n OSH_THEME= $HOME/.bashrc | cut -d: -f1)s/.*/OSH_THEME=powerline-multiline/" $HOME/.bashrc
+}
+
 function install_yay() {
   cd $HOME
   if which yay; then
@@ -55,18 +60,19 @@ function install_yay() {
 ### Menu
 actions=(
   install_deps config_kitty config_tmux config_vim config_ranger
-  install_yay theme_grub
+  install_oh_my_bash install_yay theme_grub
 )
 selected_actions=(
   install_deps config_kitty config_tmux config_vim config_ranger
+  install_oh_my_bash
 )
 
 function select_from_menu()
 {
   local prompt="--Select the configs you wanna install--"
   local options=(
-    "install dependencies" "kitty" "tmux" "vim" "ranger" "install yay"
-    "grub theme" "INSTALL"
+    "install dependencies" "kitty" "tmux" "vim" "ranger"
+    "install oh_my_bash" "install yay" "grub theme" "INSTALL"
   )
   local count=${#options[@]}
   local cursor=$(($count-1))
