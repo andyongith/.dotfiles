@@ -12,8 +12,8 @@ function install_deps() {
 
 function config_kitty() {
   cd $HOME
-  rm -rf .config/kitty
-  ln -sf ../.dotfiles/.config/kitty .config/kitty
+  rm -rf .config/kitty/kitty.conf
+  ln -sf ../.dotfiles/.config/kitty/kitty.conf .config/kitty/kitty.conf
 }
 
 function config_tmux() {
@@ -28,8 +28,8 @@ function config_vim() {
 
 function config_ranger() {
   cd $HOME
-  rm -rf .config/ranger
-  ln -sf ../.dotfiles/.config/ranger .config/ranger
+  rm -rf .config/ranger/rc.conf
+  ln -sf ../.dotfiles/.config/ranger .config/ranger/rc.conf
 }
 
 function install_oh_my_bash() {
