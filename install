@@ -50,9 +50,13 @@ function install_yay() {
   fi
 }
 
-#function theme_grub() {
-#  #code to add a grub theme
-#}
+function theme_grub() {
+  mkdir -p $HOME/Downloads
+  cd $HOME/Downloads
+  git clone https://github.com/andyongith/argon-grub-theme.git
+  cd argon-grub-theme
+  sudo ./install.sh -r 1080p -b Crystals -e -i
+}
 
 
 ### Menu
@@ -142,4 +146,4 @@ function install_selected() {
 select_from_menu
 install_selected
 
-echo -e "\e[1mnote:You need to reload your terminal\e[0m"
+echo -e "\e[1mnote:You may need to reload your terminal\e[0m"
