@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+install_deps_desc="install dependencies"
 function install_deps() {
   sudo pacman -Sy
   sudo pacman -S --needed --noconfirm git nerd-fonts noto-fonts \
@@ -10,6 +11,7 @@ function install_deps() {
   fi
 }
 
+config_kitty_desc="kitty"
 function config_kitty() {
   cd $HOME
   mkdir -p .config/kitty
@@ -17,16 +19,19 @@ function config_kitty() {
   ln -sf ../../.dotfiles/.config/kitty/kitty.conf .config/kitty/kitty.conf
 }
 
+config_tmux_desc="tmux"
 function config_tmux() {
   cd $HOME
   ln -sf .dotfiles/.tmux.conf
 }
 
+config_vim_desc="vim"
 function config_vim() {
   cd $HOME
   ln -sf .dotfiles/.vimrc
 }
 
+config_ranger_desc="ranger"
 function config_ranger() {
   cd $HOME
   mkdir -p .config/ranger
@@ -34,11 +39,13 @@ function config_ranger() {
   ln -sf ../../.dotfiles/.config/ranger/rc.conf .config/ranger/rc.conf
 }
 
+install_oh_my_bash_desc="install oh_my_bash"
 function install_oh_my_bash() {
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended
   sed -i "$(grep -n OSH_THEME= $HOME/.bashrc | cut -d: -f1)s/.*/OSH_THEME=powerline-multiline/" $HOME/.bashrc
 }
 
+install_yay_desc="install yay"
 function install_yay() {
   cd $HOME
   if which yay; then
@@ -50,6 +57,7 @@ function install_yay() {
   fi
 }
 
+theme_grub_desc="grub theme"
 function theme_grub() {
   mkdir -p $HOME/Downloads
   cd $HOME/Downloads
@@ -72,12 +80,15 @@ selected_actions=(
 function select_from_menu()
 {
   local prompt="--Select the configs you wanna install--"
-  local options=(
-    "install dependencies" "kitty" "tmux" "vim" "ranger"
-    "install oh_my_bash" "install yay" "grub theme" "INSTALL"
-  )
+  local options=()
+  for option in ${actions[@]}
+  do
+    option="${option}_desc"
+    options+=("${!option}")
+  done
+  options+=("INSTALL" "Cancel")
   local count=${#options[@]}
-  local cursor=$(($count-1))
+  local cursor=$(($count-2))
   local esc=$(echo -en "\e")
   
   echo $prompt
@@ -110,9 +121,14 @@ function select_from_menu()
     read -s -n1 key0
     if [[ $key0 == "" ]]
     then
-      if [[ -z "${actions[$cursor]}" ]]
+      if [[ ${options[$cursor]} == "INSTALL" ]]
       then
+        echo "Installing"
         break
+      elif [[ ${options[$cursor]} == "Cancel" ]]
+      then
+        echo "Not Installing"
+        exit 1
       elif $(echo ${selected_actions[@]} | grep -q "${actions[$cursor]}")
       then
         selected_actions=(${selected_actions[@]/${actions[$cursor]}})
@@ -144,6 +160,6 @@ function install_selected() {
 }
 
 select_from_menu
-install_selected
+#install_selected
 
 echo -e "\e[1mnote:You may need to reload your terminal\e[0m"
