@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+actions=()
+selected_actions=()
+
 install_deps_desc="install dependencies"
 function install_deps() {
   sudo pacman -Sy
@@ -10,6 +13,8 @@ function install_deps() {
     mkdir $HOME/.config
   fi
 }
+actions+=(install_deps)
+selected_actions+=(install_deps)
 
 config_kitty_desc="kitty"
 function config_kitty() {
@@ -18,18 +23,24 @@ function config_kitty() {
   rm -rf .config/kitty/kitty.conf
   ln -sf ../../.dotfiles/.config/kitty/kitty.conf .config/kitty/kitty.conf
 }
+actions+=(config_kitty)
+selected_actions+=(config_kitty)
 
 config_tmux_desc="tmux"
 function config_tmux() {
   cd $HOME
   ln -sf .dotfiles/.tmux.conf
 }
+actions+=(config_tmux)
+selected_actions+=(config_tmux)
 
 config_vim_desc="vim"
 function config_vim() {
   cd $HOME
   ln -sf .dotfiles/.vimrc
 }
+actions+=(config_vim)
+selected_actions+=(config_vim)
 
 config_ranger_desc="ranger"
 function config_ranger() {
@@ -38,12 +49,16 @@ function config_ranger() {
   rm -rf .config/ranger/rc.conf
   ln -sf ../../.dotfiles/.config/ranger/rc.conf .config/ranger/rc.conf
 }
+actions+=(config_ranger)
+selected_actions+=(config_ranger)
 
 install_oh_my_bash_desc="install oh_my_bash"
 function install_oh_my_bash() {
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended
   sed -i "$(grep -n OSH_THEME= $HOME/.bashrc | cut -d: -f1)s/.*/OSH_THEME=powerline-multiline/" $HOME/.bashrc
 }
+actions+=(install_oh_my_bash)
+selected_actions+=(install_oh_my_bash)
 
 install_yay_desc="install yay"
 function install_yay() {
@@ -56,6 +71,7 @@ function install_yay() {
     makepkg -si --noconfirm
   fi
 }
+actions+=(install_yay)
 
 theme_grub_desc="grub theme"
 function theme_grub() {
@@ -65,18 +81,10 @@ function theme_grub() {
   cd argon-grub-theme
   sudo ./install.sh -r 1080p -b Crystals -e -i
 }
+actions+=(theme_grub)
 
 
 ### Menu
-actions=(
-  install_deps config_kitty config_tmux config_vim config_ranger
-  install_oh_my_bash install_yay theme_grub
-)
-selected_actions=(
-  install_deps config_kitty config_tmux config_vim config_ranger
-  install_oh_my_bash
-)
-
 function select_from_menu()
 {
   local prompt="--Select the configs you wanna install--"
@@ -123,11 +131,11 @@ function select_from_menu()
     then
       if [[ ${options[$cursor]} == "INSTALL" ]]
       then
-        echo "Installing"
+        echo "Installing..."
         break
       elif [[ ${options[$cursor]} == "Cancel" ]]
       then
-        echo "Not Installing"
+        echo "Cancelling..."
         exit 1
       elif $(echo ${selected_actions[@]} | grep -q "${actions[$cursor]}")
       then
@@ -155,11 +163,11 @@ function select_from_menu()
 function install_selected() {
   for action in ${selected_actions[@]}
   do
-    ${action}
+    echo ${action}
   done
 }
 
 select_from_menu
-#install_selected
+install_selected
 
 echo -e "\e[1mnote:You may need to reload your terminal\e[0m"
