@@ -87,6 +87,8 @@ actions+=(theme_grub)
 ### Menu
 function select_from_menu()
 {
+  echo -en "\e[?25l" #hides cursor from terminal
+
   local prompt="--Select the configs you wanna install--"
   local options=()
   for option in ${actions[@]}
@@ -98,11 +100,64 @@ function select_from_menu()
   local count=${#options[@]}
   local cursor=$(($count-2))
   local esc=$(echo -en "\e")
-  
-  echo $prompt
-  while true
-  do
-    ## printing menu
+  local menu_opened=true
+
+  function mv_cursor_up() {
+    ((cursor-=1))
+    [[ $cursor -lt 0 ]] && ((cursor = $count - 1))
+  }
+  function mv_cursor_down() {
+    ((cursor+=1))
+    [[ $cursor -ge $count ]] && cursor=0
+  }
+
+  function toggle_selection() {
+    if echo ${selected_actions[@]} | grep -q "${actions[$cursor]}"
+    then
+      selected_actions=(${selected_actions[@]/${actions[$cursor]}})
+    else
+      selected_actions=(${selected_actions[@]} ${actions[$cursor]})
+    fi
+  }
+
+  function exit_menu() {
+    msg=$1
+    exit_cmd=$2
+    shift; shift;
+    echo -en "\e[${count}B"
+    echo -en "\e[?25h" #shows cursor
+    echo $msg
+    menu_opened=false
+    $exit_cmd $@
+  }
+
+  function enter_pressed() {
+    case ${options[$cursor]} in
+      "INSTALL") exit_menu "Installing...";;
+      "Cancel") exit_menu "Cancelling..." exit 1;;
+      *) toggle_selection;;
+    esac
+  }
+
+  function handle_keyboard() {
+    local key0
+    local key
+    read -s -n1 key0
+    case $key0 in
+      "") enter_pressed;;
+      "k") mv_cursor_up;;
+      "j") mv_cursor_down;;
+      $esc)
+        read -s -n2 key
+        case $key in
+          "[A") mv_cursor_up;;
+          "[B") mv_cursor_down;;
+        esac
+        ;;
+    esac
+  }
+
+  function print_menu() {
     local index=0
     for opt in "${options[@]}"
     do
@@ -123,47 +178,21 @@ function select_from_menu()
       fi
       ((index+=1))
     done
-    ## keyboard event handler
-    local key0
-    local key
-    read -s -n1 key0
-    if [[ $key0 == "" ]]
-    then
-      if [[ ${options[$cursor]} == "INSTALL" ]]
-      then
-        echo "Installing..."
-        break
-      elif [[ ${options[$cursor]} == "Cancel" ]]
-      then
-        echo "Cancelling..."
-        exit 1
-      elif $(echo ${selected_actions[@]} | grep -q "${actions[$cursor]}")
-      then
-        selected_actions=(${selected_actions[@]/${actions[$cursor]}})
-      else
-        selected_actions=(${selected_actions[@]} ${actions[$cursor]})
-      fi
-    elif [[ $key0 == $esc ]]
-    then
-      read -s -n2 key
-      if [[ $key == [A ]]
-      then
-        ((cursor-=1))
-        [[ $cursor -lt 0 ]] && ((cursor = $count - 1))
-      elif [[ $key == [B ]]
-      then
-        ((cursor+=1))
-        [[ $cursor -ge $count ]] && cursor=0
-      fi
-    fi
     echo -en "\e[${count}A"
+  }
+  
+  echo $prompt
+  while [[ $menu_opened == true ]]
+  do
+    print_menu
+    handle_keyboard
   done
 }
 
 function install_selected() {
   for action in ${selected_actions[@]}
   do
-    echo ${action}
+    ${action}
   done
 }
 
