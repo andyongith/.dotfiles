@@ -16,5 +16,5 @@ call plug#end()
 
 
 " nerdtree settings
-nnoremap <C-n> :NERDTreeToggle<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
 " Open the existing NERDTree on each new tab.
