@@ -5,9 +5,16 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" Plugins
+
+" Plugins to install
 call plug#begin('~/.vim/plugged')
 
 Plug 'jiangmiao/auto-pairs'
+Plug 'preservim/nerdtree'
 
 call plug#end()
+
+
+" nerdtree settings
+nnoremap <C-n> :NERDTreeToggle<CR>
+" Open the existing NERDTree on each new tab.
