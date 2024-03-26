@@ -11,3 +11,8 @@ set wrap
 set smartcase
 set showtabline=2
 set history=200
+
+" Calling the .vimrc.plug file
+if filereadable(expand("~/.vimrc.plug"))
+  source ~/.vimrc.plug
+endif

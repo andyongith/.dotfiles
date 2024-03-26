@@ -3,6 +3,7 @@
 actions=()
 selected_actions=()
 
+
 install_deps_desc="install dependencies"
 function install_deps() {
   sudo pacman -Sy
@@ -16,6 +17,7 @@ function install_deps() {
 actions+=(install_deps)
 selected_actions+=(install_deps)
 
+
 config_kitty_desc="kitty"
 function config_kitty() {
   cd $HOME
@@ -26,6 +28,7 @@ function config_kitty() {
 actions+=(config_kitty)
 selected_actions+=(config_kitty)
 
+
 config_tmux_desc="tmux"
 function config_tmux() {
   cd $HOME
@@ -34,13 +37,16 @@ function config_tmux() {
 actions+=(config_tmux)
 selected_actions+=(config_tmux)
 
+
 config_vim_desc="vim"
 function config_vim() {
   cd $HOME
   ln -sf .dotfiles/.vimrc
+  ln -sf .dotfiles/.vimrc.plug
 }
 actions+=(config_vim)
 selected_actions+=(config_vim)
+
 
 config_ranger_desc="ranger"
 function config_ranger() {
@@ -52,6 +58,7 @@ function config_ranger() {
 actions+=(config_ranger)
 selected_actions+=(config_ranger)
 
+
 install_oh_my_bash_desc="install oh_my_bash"
 function install_oh_my_bash() {
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended
@@ -59,6 +66,7 @@ function install_oh_my_bash() {
 }
 actions+=(install_oh_my_bash)
 selected_actions+=(install_oh_my_bash)
+
 
 install_yay_desc="install yay"
 function install_yay() {
@@ -72,6 +80,7 @@ function install_yay() {
   fi
 }
 actions+=(install_yay)
+
 
 theme_grub_desc="grub theme"
 function theme_grub() {
