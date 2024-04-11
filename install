@@ -6,10 +6,15 @@ selected_actions=()
 
 install_deps_desc="install dependencies"
 function install_deps() {
-  sudo pacman -Sy
-  sudo pacman -S --needed --noconfirm git curl nerd-fonts noto-fonts \
-    noto-fonts-emoji noto-fonts-cjk noto-fonts-extra
-  
+	if which -s pacman; then
+		sudo pacman -Sy
+		sudo pacman -S --needed --noconfirm git curl nerd-fonts noto-fonts \
+			noto-fonts-emoji noto-fonts-cjk noto-fonts-extra
+	elif which -s apt; then
+		sudo apt update
+		sudo apt install git curl fonts-noto
+	fi
+		
   if [ ! -d $HOME/.config ]; then
     mkdir $HOME/.config
   fi
