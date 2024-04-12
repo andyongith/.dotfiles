@@ -79,6 +79,18 @@ options+=(install_oh_my_bash)
 selected_options+=(install_oh_my_bash)
 
 
+config_neofetch_name="neofetch"
+config_neofetch_desc=
+function config_neofetch() {
+  cd $HOME
+  mkdir -p .config/neofetch
+  rm -rf .config/neofetch/config.conf
+  ln -sf ../../.dotfiles/.config/neofetch/config.conf .config/neofetch/config.conf
+}
+options+=(config_neofetch)
+selected_options+=(config_neofetch)
+
+
 install_yay_name="install yay"
 install_yay_desc=
 function install_yay() {
