@@ -5,7 +5,10 @@ selected_options=()
 
 
 install_deps_name="install dependencies"
-install_deps_desc="this includes git, curl, nerd fonts, noto fonts"
+install_deps_desc="this includes git, curl, noto fonts"
+if which -s pacman; then
+	install_deps_desc="${install_deps_desc}, nerd fonts"
+fi
 function install_deps() {
 	if which -s pacman; then
 		sudo pacman -Sy
@@ -22,6 +25,26 @@ function install_deps() {
 }
 options+=(install_deps)
 selected_options+=(install_deps)
+
+
+install_nerd_fonts_name="install nerd-fonts"
+install_nerd_fonts_desc="this downloads and installs all nerd fonts"
+function install_nerd_fonts() {
+	local version = '3.2.1'
+	cd ~/Downloads
+	curl -o "https://github.com/ryanoasis/nerd-fonts/archive/refs/tags/v${version}.zip" -o "nerd-fonts-${version}.zip"
+	unzip nerd-fonts-${version}
+	cd nerd-fonts-${version}
+	sudo ./install.sh -S
+}
+if which -s apt; then
+	options+=(install_nerd_fonts)
+	if fc-list | grep -q NerdFont; then
+		selectd_options+=();
+	else
+		selected_options+=(install_nerd_fonts)
+	fi
+fi
 
 
 config_kitty_name="kitty"
