@@ -1,17 +1,20 @@
 
-set number relativenumber
+set number
+set relativenumber
 set scrolloff=5
-set ruler showcmd
-set wildmenu
-set mouse=a
-syntax on
-set smartindent shiftwidth=2 tabstop=2
-" set expandtab
-set wrap
-set smartcase
+set ruler
+set showcmd
 set showtabline=2
-set history=200
+syntax on
+
+set smartindent
+set expandtab
+set shiftwidth=2
+set tabstop=2
 set wrap!
+
+set mouse=a
+set history=200
 
 " Calling the .vimrc.plug file
 if filereadable(expand("~/.vimrc.plug"))
