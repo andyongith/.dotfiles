@@ -80,6 +80,32 @@ options+=(config_vim)
 selected_options+=(config_vim)
 
 
+config_nvim_name="neovim"
+config_nvim_desc=
+function config_nvim() {
+  cd $HOME/
+  mkdir -p .config/nvim/lua/core/plugin_config
+  local sourcePath='../../.dotfiles/.config/nvim'
+
+  cd .config/nvim
+  ln -sf ${sourcePath}/init.lua
+
+  cd lua/core
+  sourcePath="../../${sourcePath}/lua/core"
+  ln -sf ${sourcePath}/basic_config.lua
+  ln -sf ${sourcePath}/plugins.lua
+
+  cd plugin_config
+  sourcePath="../${sourcePath}/plugin_config"
+  local configFiles=($(ls ${sourcePath}))
+  for configFile in "${configFiles[@]}"; do
+    ln -sf ${sourcePath}/${configFile}
+  done
+}
+options+=(config_nvim)
+selected_options+=(config_nvim)
+
+
 config_ranger_name="ranger"
 config_ranger_desc=
 function config_ranger() {
