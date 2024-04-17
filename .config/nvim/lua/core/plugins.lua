@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Installing plugins
 
 vim.g.mapleader = " "
-vim.g.maplocalleader = "\\" 
+vim.g.maplocalleader = "\\"
 
 require("lazy").setup({
   {
@@ -44,4 +44,9 @@ require("lazy").setup({
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
   },
+
+  -- lsp with meson
+  "williamboman/mason.nvim",
+  "williamboman/mason-lspconfig.nvim",
+  "neovim/nvim-lspconfig",
 })
