@@ -77,6 +77,7 @@ plugins=(
   extract
   sdk
   you-should-use
+  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
