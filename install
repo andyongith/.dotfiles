@@ -125,7 +125,19 @@ function install_oh_my_bash() {
   sed -i "$(grep -n OSH_THEME= $HOME/.bashrc | cut -d: -f1)s/.*/OSH_THEME=powerline-multiline/" $HOME/.bashrc
 }
 options+=(install_oh_my_bash)
-selected_options+=(install_oh_my_bash)
+
+
+install_oh_my_zsh_name="install oh_my_zsh"
+install_oh_my_zsh_desc=
+function install_oh_my_zsh() {
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  git clone https://github.com/MichaelAquilina/zsh-you-should-use.git $ZSH_CUSTOM/plugins/you-should-use
+
+  cd $HOME
+  ln -sf .dotfiles/.zshrc
+}
+options+=(install_oh_my_zsh)
+selected_options+=(install_oh_my_zsh)
 
 
 config_neofetch_name="neofetch"
