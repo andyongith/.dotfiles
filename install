@@ -84,22 +84,28 @@ config_nvim_name="neovim"
 config_nvim_desc=
 function config_nvim() {
   cd $HOME/
-  mkdir -p .config/nvim/lua/core/plugin_config
-  local sourcePath='../../.dotfiles/.config/nvim'
+  mkdir -p .config/nvim/lua/config
+  mkdir -p .config/nvim/lua/plugins
 
   cd .config/nvim
-  ln -sf ${sourcePath}/init.lua
-
-  cd lua/core
-  sourcePath="../../${sourcePath}/lua/core"
-  ln -sf ${sourcePath}/basic_config.lua
-  ln -sf ${sourcePath}/plugins.lua
-
-  cd plugin_config
-  sourcePath="../${sourcePath}/plugin_config"
-  local configFiles=($(ls ${sourcePath}))
+  local sourcePath='../../.dotfiles/.config/nvim'
+  local configFiles=($(ls -p ${sourcePath} | grep -v /))
   for configFile in "${configFiles[@]}"; do
     ln -sf ${sourcePath}/${configFile}
+  done
+
+  cd lua/config
+  local configsourcePath="../../${sourcePath}/lua/config"
+  local configFiles=($(ls -p ${connfigsourcePath} | grep -v /))
+  for configFile in "${configFiles[@]}"; do
+    ln -sf ${configsourcePath}/${configFile}
+  done
+
+  cd ../plugins
+  local pluginsourcePath="../../${sourcePath}/lua/plugins"
+  local configFiles=($(ls -p ${pluginsourcePath} | grep -v /))
+  for configFile in "${configFiles[@]}"; do
+    ln -sf ${pluginsourcePath}/${configFile}
   done
 }
 options+=(config_nvim)
