@@ -89,21 +89,21 @@ function config_nvim() {
 
   cd .config/nvim
   local sourcePath='../../.dotfiles/.config/nvim'
-  local configFiles=($(ls -p ${sourcePath} | grep -v /))
+  local configFiles=($(ls -pA ${sourcePath} | grep -v /))
   for configFile in "${configFiles[@]}"; do
     ln -sf ${sourcePath}/${configFile}
   done
 
   cd lua/config
   local configsourcePath="../../${sourcePath}/lua/config"
-  local configFiles=($(ls -p ${connfigsourcePath} | grep -v /))
+  configFiles=($(ls -pA ${configsourcePath} | grep -v /))
   for configFile in "${configFiles[@]}"; do
     ln -sf ${configsourcePath}/${configFile}
   done
 
   cd ../plugins
   local pluginsourcePath="../../${sourcePath}/lua/plugins"
-  local configFiles=($(ls -p ${pluginsourcePath} | grep -v /))
+  configFiles=($(ls -pA ${pluginsourcePath} | grep -v /))
   for configFile in "${configFiles[@]}"; do
     ln -sf ${pluginsourcePath}/${configFile}
   done
