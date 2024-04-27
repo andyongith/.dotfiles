@@ -3,7 +3,6 @@
 options=()
 selected_options=()
 
-
 install_deps_name="install dependencies"
 install_deps_desc="this includes git, curl, noto fonts"
 if which pacman; then
@@ -18,14 +17,13 @@ function install_deps() {
 		sudo apt update
 		sudo apt install git curl fonts-noto
 	fi
-		
-  if [ ! -d $HOME/.config ]; then
-    mkdir $HOME/.config
-  fi
+
+	if [ ! -d $HOME/.config ]; then
+		mkdir $HOME/.config
+	fi
 }
 options+=(install_deps)
 selected_options+=(install_deps)
-
 
 install_nerd_fonts_name="install nerd-fonts"
 install_nerd_fonts_desc="this downloads and installs all nerd fonts"
@@ -40,160 +38,134 @@ function install_nerd_fonts() {
 if which apt; then
 	options+=(install_nerd_fonts)
 	if fc-list | grep -q NerdFont; then
-		selectd_options+=();
+		selectd_options+=()
 	else
 		selected_options+=(install_nerd_fonts)
 	fi
 fi
 
-
 config_kitty_name="kitty"
 config_kitty_desc=
 function config_kitty() {
-  cd $HOME
-  mkdir -p .config/kitty
-  rm -rf .config/kitty/kitty.conf
-  ln -sf ../../.dotfiles/.config/kitty/kitty.conf .config/kitty/kitty.conf
+	cd $HOME
+	mkdir -p .config/kitty
+	rm -rf .config/kitty/kitty.conf
+	ln -sf ../../.dotfiles/.config/kitty/kitty.conf .config/kitty/kitty.conf
 }
 options+=(config_kitty)
 selected_options+=(config_kitty)
 
-
 config_tmux_name="tmux"
 config_tmux_desc=
 function config_tmux() {
-  cd $HOME
-  ln -sf .dotfiles/.tmux.conf
+	cd $HOME
+	ln -sf .dotfiles/.tmux.conf
 }
 options+=(config_tmux)
 selected_options+=(config_tmux)
 
-
 config_vim_name="vim"
 config_vim_desc=
 function config_vim() {
-  cd $HOME
-  ln -sf .dotfiles/.vimrc
-  ln -sf .dotfiles/.vimrc.plug
+	cd $HOME
+	ln -sf .dotfiles/.vimrc
+	ln -sf .dotfiles/.vimrc.plug
 }
 options+=(config_vim)
 selected_options+=(config_vim)
 
-
 config_nvim_name="neovim"
 config_nvim_desc=
 function config_nvim() {
-  cd $HOME/
-  mkdir -p .config/nvim/lua/config
-  mkdir -p .config/nvim/lua/plugins
+	cd $HOME/
+	mkdir -p .config/nvim/
+	[[ -d .config/nvim/lua ]] && rm -rf .config/nvim/lua
 
-  cd .config/nvim
-  local sourcePath='../../.dotfiles/.config/nvim'
-  local configFiles=($(ls -pA ${sourcePath} | grep -v /))
-  for configFile in "${configFiles[@]}"; do
-    ln -sf ${sourcePath}/${configFile}
-  done
-
-  cd lua/config
-  local configsourcePath="../../${sourcePath}/lua/config"
-  configFiles=($(ls -pA ${configsourcePath} | grep -v /))
-  for configFile in "${configFiles[@]}"; do
-    ln -sf ${configsourcePath}/${configFile}
-  done
-
-  cd ../plugins
-  local pluginsourcePath="../../${sourcePath}/lua/plugins"
-  configFiles=($(ls -pA ${pluginsourcePath} | grep -v /))
-  for configFile in "${configFiles[@]}"; do
-    ln -sf ${pluginsourcePath}/${configFile}
-  done
+	cd .config/nvim
+	local sourcePath='../../.dotfiles/.config/nvim'
+	local configFiles=($(ls -pA ${sourcePath}))
+	for configFile in "${configFiles[@]}"; do
+		ln -sf ${sourcePath}/${configFile}
+	done
 }
 options+=(config_nvim)
 selected_options+=(config_nvim)
 
-
 config_ranger_name="ranger"
 config_ranger_desc=
 function config_ranger() {
-  cd $HOME
-  mkdir -p .config/ranger
-  rm -rf .config/ranger/rc.conf
-  ln -sf ../../.dotfiles/.config/ranger/rc.conf .config/ranger/rc.conf
+	cd $HOME
+	mkdir -p .config/ranger
+	rm -rf .config/ranger/rc.conf
+	ln -sf ../../.dotfiles/.config/ranger/rc.conf .config/ranger/rc.conf
 }
 options+=(config_ranger)
 selected_options+=(config_ranger)
 
-
 install_oh_my_bash_name="install oh_my_bash"
 install_oh_my_bash_desc=
 function install_oh_my_bash() {
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended
-  sed -i "$(grep -n OSH_THEME= $HOME/.bashrc | cut -d: -f1)s/.*/OSH_THEME=powerline-multiline/" $HOME/.bashrc
+	bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" --unattended
+	sed -i "$(grep -n OSH_THEME= $HOME/.bashrc | cut -d: -f1)s/.*/OSH_THEME=powerline-multiline/" $HOME/.bashrc
 }
 options+=(install_oh_my_bash)
-
 
 install_oh_my_zsh_name="install oh_my_zsh"
 install_oh_my_zsh_desc=
 function install_oh_my_zsh() {
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-  local ZSH_CUSTOM=~/.oh-my-zsh/custom
-  git clone https://github.com/MichaelAquilina/zsh-you-should-use.git $ZSH_CUSTOM/plugins/you-should-use
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+	local ZSH_CUSTOM=~/.oh-my-zsh/custom
+	git clone https://github.com/MichaelAquilina/zsh-you-should-use.git $ZSH_CUSTOM/plugins/you-should-use
+	git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-  cd $HOME
-  ln -sf .dotfiles/.zshrc
+	cd $HOME
+	ln -sf .dotfiles/.zshrc
 }
 options+=(install_oh_my_zsh)
 selected_options+=(install_oh_my_zsh)
 
-
 config_neofetch_name="neofetch"
 config_neofetch_desc=
 function config_neofetch() {
-  cd $HOME
-  mkdir -p .config/neofetch
-  rm -rf .config/neofetch/config.conf
-  ln -sf ../../.dotfiles/.config/neofetch/config.conf .config/neofetch/config.conf
+	cd $HOME
+	mkdir -p .config/neofetch
+	rm -rf .config/neofetch/config.conf
+	ln -sf ../../.dotfiles/.config/neofetch/config.conf .config/neofetch/config.conf
 }
 options+=(config_neofetch)
 selected_options+=(config_neofetch)
 
-
 install_yay_name="install yay"
 install_yay_desc=
 function install_yay() {
-  cd $HOME
-  if which yay; then
-    echo "yay is already installed"
-  else
-    git clone https://aur.archlinux.org/yay.git yay-git
-    cd yay-git
-    makepkg -si --noconfirm
-  fi
+	cd $HOME
+	if which yay; then
+		echo "yay is already installed"
+	else
+		git clone https://aur.archlinux.org/yay.git yay-git
+		cd yay-git
+		makepkg -si --noconfirm
+	fi
 }
 options+=(install_yay)
-
 
 theme_grub_name="grub theme"
 theme_grub_desc="https://github.com/andyongith/argon-grub-theme.git"
 function theme_grub() {
-  mkdir -p $HOME/Downloads
-  cd $HOME/Downloads
-  git clone https://github.com/andyongith/argon-grub-theme.git
-  cd argon-grub-theme
-  sudo ./install.sh -r 1080p -b Crystals -e -i
+	mkdir -p $HOME/Downloads
+	cd $HOME/Downloads
+	git clone https://github.com/andyongith/argon-grub-theme.git
+	cd argon-grub-theme
+	sudo ./install.sh -r 1080p -b Crystals -e -i
 }
 options+=(theme_grub)
-
 
 extra_options=("INSTALL" "Cancel")
 options+=("${extra_options[@]}")
 
 ### Menu
-function select_from_menu()
-{
+function select_from_menu() {
 	SAVE_CURSOR="\e[s"
 	RESTORE_CURSOR="\e[u"
 	HIDE_CURSOR="\e[?25l"
@@ -205,76 +177,76 @@ function select_from_menu()
 	REVERSE_FG_BG="\e[7m"
 	RESET_CURSOR="\e[0m"
 
-  echo -en $HIDE_CURSOR
+	echo -en $HIDE_CURSOR
 	clear -x
-  echo -en $SAVE_CURSOR
+	echo -en $SAVE_CURSOR
 
-  local prompt="--Select the configs you wanna install--"
+	local prompt="--Select the configs you wanna install--"
 
-  local count=${#options[@]}
-  local cursor=$(($count-2))
-  local esc=$(echo -en "\e")
-  local menu_opened=true
+	local count=${#options[@]}
+	local cursor=$(($count - 2))
+	local esc=$(echo -en "\e")
+	local menu_opened=true
 
-  function mv_cursor_up() {
-    ((cursor-=1))
-    [[ $cursor -lt 0 ]] && ((cursor = $count - 1))
-  }
-  function mv_cursor_down() {
-    ((cursor+=1))
-    [[ $cursor -ge $count ]] && cursor=0
-  }
+	function mv_cursor_up() {
+		((cursor -= 1))
+		[[ $cursor -lt 0 ]] && ((cursor = $count - 1))
+	}
+	function mv_cursor_down() {
+		((cursor += 1))
+		[[ $cursor -ge $count ]] && cursor=0
+	}
 
-  function toggle_selection() {
-    if echo ${selected_options[@]} | grep -q "${options[$cursor]}"
-    then
-      selected_options=(${selected_options[@]/${options[$cursor]}})
-    else
-      selected_options=(${selected_options[@]} ${options[$cursor]})
-    fi
-  }
+	function toggle_selection() {
+		if echo ${selected_options[@]} | grep -q "${options[$cursor]}"; then
+			selected_options=(${selected_options[@]/${options[$cursor]}/})
+		else
+			selected_options=(${selected_options[@]} ${options[$cursor]})
+		fi
+	}
 
-  function exit_menu() {
-    msg=$1
-    exit_cmd=$2
-    shift; shift;
-    echo -en "\e[${count}B"
-    echo -en $SHOW_CURSOR
-    echo $msg
-    menu_opened=false
-    $exit_cmd $@
-  }
+	function exit_menu() {
+		msg=$1
+		exit_cmd=$2
+		shift
+		shift
+		echo -en "\e[${count}B"
+		echo -en $SHOW_CURSOR
+		echo $msg
+		menu_opened=false
+		$exit_cmd $@
+	}
 
-  function enter_pressed() {
-    case ${options[$cursor]} in
-      "INSTALL") exit_menu "Installing...";;
-      "Cancel") exit_menu "Cancelling..." exit 1;;
-      *) toggle_selection;;
-    esac
-  }
+	function enter_pressed() {
+		case ${options[$cursor]} in
+		"INSTALL") exit_menu "Installing..." ;;
+		"Cancel") exit_menu "Cancelling..." exit 1 ;;
+		*) toggle_selection ;;
+		esac
+	}
 
-  function handle_keyboard() {
-    local key0
-    local key
-    read -s -n1 key0
-    case $key0 in
-      "") enter_pressed;;
-      "k") mv_cursor_up;;
-      "j") mv_cursor_down;;
-      $esc)
-        read -s -n2 key
-        case $key in
-          "[A") mv_cursor_up;;
-          "[B") mv_cursor_down;;
-        esac
-        ;;
-    esac
-  }
+	function handle_keyboard() {
+		local key0
+		local key
+		read -s -n1 key0
+		case $key0 in
+		"") enter_pressed ;;
+		"k") mv_cursor_up ;;
+		"j") mv_cursor_down ;;
+		$esc)
+			read -s -n2 key
+			case $key in
+			"[A") mv_cursor_up ;;
+			"[B") mv_cursor_down ;;
+			esac
+			;;
+		esac
+	}
 
-  function print_menu() {
-    local index=0
+	function print_menu() {
+		local index=0
 
-    for option in "${options[@]}"; do
+		for option in "${options[@]}"; do
 			option_name="${option}_name"
 			option_name="${!option_name}"
 			[[ -z $option_name ]] && option_name=${option}
@@ -285,45 +257,43 @@ function select_from_menu()
 			echo -en $CLEAR_LINE
 
 			if $(echo ${extra_options[@]} | grep -q "${options[$index]}"); then
-        echo -en "  $BOLD_YELLOW"
-      elif $(echo ${selected_options[@]} | grep -q "${options[$index]}"); then
-        echo -en " ${GREEN}+${RESET_CURSOR}"
-      else
-        echo -en " ${RED}-${RESET_CURSOR}"
-      fi
+				echo -en "  $BOLD_YELLOW"
+			elif $(echo ${selected_options[@]} | grep -q "${options[$index]}"); then
+				echo -en " ${GREEN}+${RESET_CURSOR}"
+			else
+				echo -en " ${RED}-${RESET_CURSOR}"
+			fi
 
-      if [[ $cursor == $index ]]; then
-        echo -e " ${REVERSE_FG_BG}$option_name${RESET_CURSOR} <  "
+			if [[ $cursor == $index ]]; then
+				echo -e " ${REVERSE_FG_BG}$option_name${RESET_CURSOR} <  "
 				[[ ! -z $option_desc ]] && echo -e "${CLEAR_LINE}\t${option_desc}"
-      else
-        echo -e " $option_name${RESET_CURSOR}  "
-      fi
+			else
+				echo -e " $option_name${RESET_CURSOR}  "
+			fi
 
-      (( index++ ))
-    done
-  }
-  
-  while [[ $menu_opened == true ]]
-  do
+			((index++))
+		done
+	}
+
+	while [[ $menu_opened == true ]]; do
 		echo $prompt
-    print_menu
+		print_menu
 		echo -e $CLEAR_LINE
 		echo -e $CLEAR_LINE
 		echo -e $CLEAR_LINE
-    echo -en $RESTORE_CURSOR
-    handle_keyboard
-  done
+		echo -en $RESTORE_CURSOR
+		handle_keyboard
+	done
 }
 
 function install_selected() {
-  for option in ${selected_options[@]}
-  do
-    ${option}
-  done
+	for option in ${selected_options[@]}; do
+		${option}
+	done
 }
 
 select_from_menu
 install_selected
 
 echo -e "\e[1mnote:You may need to reload your terminal\e[0m"
-  echo $prompt
+echo $prompt
