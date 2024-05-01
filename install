@@ -121,6 +121,8 @@ function install_oh_my_zsh() {
 
 	cd $HOME
 	ln -sf .dotfiles/.zshrc
+
+	curl -s "https://get.sdkman.io" | bash
 }
 options+=(install_oh_my_zsh)
 selected_options+=(install_oh_my_zsh)
