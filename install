@@ -121,6 +121,7 @@ function install_oh_my_zsh() {
 
 	cd $HOME
 	ln -sf .dotfiles/.zshrc
+	ln -sf .dotfiles/headline.zsh-theme
 
 	curl -s "https://get.sdkman.io" | bash
 }
