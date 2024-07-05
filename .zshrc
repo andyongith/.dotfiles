@@ -113,9 +113,13 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
-# set PATH so it includes user's private bin if it exists
+# set PATH so it includes user's private bin and lib if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/lib" ] ; then
+    PATH="$HOME/lib:$PATH"
 fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
